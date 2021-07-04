@@ -1,9 +1,11 @@
+// Creating a Function to Plot the bar and bubble
 function plot(id){
-// Use d3.json() to fetch data from JSON file
+
+    // Use d3.json() to fetch data from JSON file
     d3.json("samples.json").then((data) => {
         console.log(data)
 
-        // Sort the data by Greek search results
+        // Sort the data by OTU id search results
         var sortedByOTUID = data.samples.sort((a, b) => b.sample_values - a.sample_values)[0];
         var slicedOTUids = sortedByOTUID.otu_ids.slice(0, 10);
         console.log(sortedByOTUID)
@@ -16,7 +18,7 @@ function plot(id){
         // Reverse the array to accommodate Plotly's defaults
         reversedData = slicedData.reverse();
 
-        // Trace1 for the BellyButton Data
+        // Trace1 for the BellyButton Data bar
         var trace1 = {
         x: slicedData,
         y: slicedOTUids.map(otuID => `OTU ${otuID}`),
@@ -64,6 +66,25 @@ function plot(id){
         };
 
         Plotly.newPlot("bubble", bubble_data, bubble_layout);
+
+        var washingFreq = data.metadata.map(d => d.wfreq)
+        console.log(`Washing Freq: ${washingFreq}`)
+
+        var data = [
+            {
+              domain: { x: [0, 1], y: [0, 1] },
+              value: washingFreq[0],
+              title: { text: "Belly Button Washing Frecuency" },
+              type: "indicator",
+              mode: "gauge+number",
+              delta: { reference: 4 },
+              gauge: { axis: { range: [null, 9] } }
+            }
+          ];
+          
+          var layout = { width: 600, height: 400 };
+          Plotly.newPlot('gauge', data, layout);
+
     });
 }
 
