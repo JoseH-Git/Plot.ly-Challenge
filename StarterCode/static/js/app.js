@@ -1,44 +1,67 @@
-// Call updatePlotly() when a change takes place to the DOM
-d3.selectAll("#selDataset").on("change", updatePlotly);
+// Use d3.json() to fetch data from JSON file
+d3.json("samples.json").then((data) => {
+    console.log(data)
 
-// This function is called when a dropdown menu item is selected
-function updatePlotly() {
-  // Use D3 to select the dropdown menu
-  var dropdownMenu = d3.select("#selDataset");
-  // Assign the value of the dropdown menu option to a variable
-  var dataset = dropdownMenu.property("value");
+    // Sort the data by Greek search results
+    var sortedByOTUID = data.samples.sort((a, b) => b.sample_values - a.sample_values)[0];
+    var slicedOTUids = sortedByOTUID.otu_ids.slice(0, 10);
+    console.log(sortedByOTUID)
+    console.log(slicedOTUids)
 
-// Use D3 fetch to read the JSON file
-// The data from the JSON file is arbitrarily named importedData as the argument
-d3.json("samples.json").then((importedData) => {
-    // console.log(importedData);
-    var data = importedData
-    console.log(data);
-    }
-  // Trace1 for the Greek Data
-  var trace1 = {
-    x: data.map(row => row.otu_ids),
-    y: data.map(row => row.sample_values),
-    text: data.map(row => otu_labels),
-    name: "Greek",
+    // Slice the first 10 objects for plotting
+    slicedData = sortedByOTUID.sample_values.slice(0, 10);
+    console.log(slicedData)
+
+    // // Reverse the array to accommodate Plotly's defaults
+    // reversedData = slicedData.reverse();
+
+    // Trace1 for the Greek Data
+    var trace1 = {
+    x: slicedData,
+    y: slicedOTUids.map(otuID => `OTU ${otuID}`),
+    text: sortedByOTUID.otu_labels,
+    name: "OTU",
     type: "bar",
-    orientation: "V"
-  };
+    orientation: "h"
+    };
 
-  // data
-  var chartData = [trace1];
+    // data
+    //var data = [trace1];
 
-  // Apply the group bar mode to the layout
-  var layout = {
-    title: "Top 10 Bacteria Cultures Found",
+    // Apply the group bar mode to the layout
+    var layout = {
+    title: "Belly Button Biodiversity",
     margin: {
-      l: 100,
-      r: 100,
-      t: 100,
-      b: 100
+        l: 100,
+        r: 100,
+        t: 100,
+        b: 100
     }
-  };
+    };
 
-  // Render the plot to the div tag with id "plot"
-  Plotly.newPlot("plot", chartData, layout);
+    // // Render the plot to the div tag with id "plot"
+    Plotly.newPlot("bar", [trace1], layout);
+
 });
+
+
+//////////////////////////////////////////////////////////////////////////////
+
+// // Call updatePlotly() when a change takes place to the DOM
+// d3.selectAll("#selDataset").on("change", updatePlotly);
+
+// // This function is called when a dropdown menu item is selected
+// function updatePlotly() {
+//     // Use D3 to select the dropdown menu
+//     var dropdownMenu = d3.select("#selDataset");
+//     // Assign the value of the dropdown menu option to a variable
+//     var dataset = dropdownMenu.property("value");
+    
+//     data.names.forEach(function(name) {
+//         dropdown.append("option").text(name).property("value");
+//     });
+  
+//     // Note the extra brackets around 'x' and 'y'
+//     Plotly.restyle("plot", "x", [x]);
+//     Plotly.restyle("plot", "y", [y]);
+//   }
