@@ -12,8 +12,8 @@ d3.json("samples.json").then((data) => {
     slicedData = sortedByOTUID.sample_values.slice(0, 10);
     console.log(slicedData)
 
-    // // Reverse the array to accommodate Plotly's defaults
-    // reversedData = slicedData.reverse();
+    // Reverse the array to accommodate Plotly's defaults
+    reversedData = slicedData.reverse();
 
     // Trace1 for the Greek Data
     var trace1 = {
