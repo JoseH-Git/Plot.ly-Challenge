@@ -42,9 +42,47 @@ d3.json("samples.json").then((data) => {
     // // Render the plot to the div tag with id "plot"
     Plotly.newPlot("bar", [trace1], layout);
 
+    // Bubble Trace
+    var bubble_trace = {
+        x: sortedByOTUID.otu_ids,
+        y: sortedByOTUID.sample_values,
+        mode: 'markers',
+        marker: {
+            size: sortedByOTUID.sample_values,
+            color: sortedByOTUID.otu_ids
+        },
+        text: sortedByOTUID.otu_labels
+    };
+
+    var bubble_data = [bubble_trace];
+
+    var bubble_layout = {
+        title: "Bubble Chart by Sample",
+        xaxis: {title: 'OTU ID'},
+        yaxis: {title: ''}
+    };
+
+    Plotly.newPlot("bubble", bubble_data, bubble_layout);
 });
 
 
+
+// function init(){
+//     // Dropdown in HTML
+//     var menu_dropdown = d3.select("#selDataset")
+//     //JSON Data
+//     d3.json("data/samples.json").then(data => {
+//         console.log(data)
+
+//         var name_id = data.names;
+        
+//         name_id.forEach(name => menu_dropdown.append('option').text(name).property('value', name))    
+//     plot_build(name_id[0]);
+//     demographic_build(name_id[0]);
+//     });
+// };
+
+// init()
 //////////////////////////////////////////////////////////////////////////////
 
 // // Call updatePlotly() when a change takes place to the DOM
