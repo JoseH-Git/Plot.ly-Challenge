@@ -114,7 +114,7 @@ function meta(id) {
 }
 
 // Create the function for the change event
-function updatePlotly(id) {
+function optionChanged(id) {
     plot(id);
     meta(id);
 }
@@ -122,10 +122,10 @@ function updatePlotly(id) {
 // Create the function for the initial data rendering
 function init() {
     // Select dropdown menu 
-    var dropdown = d3.select("#selDataset");    
+    var dropdown = d3.select("#selDataset"); 
 
     // Use d3.json() to fetch data from JSON file
-    d3.json("samples.json").on("change", updatePlotly).then((data)=> {
+    d3.json("samples.json").then((data)=> {
         console.log(data)
 
         // Filling the dropdown menu
