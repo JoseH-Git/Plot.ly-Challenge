@@ -5,18 +5,23 @@ function plot(id){
     d3.json("samples.json").then((data) => {
         console.log(data)
 
+        var dataNew = data.samples.filter(data => data.id.toString() === id)[0];
+        console.log(dataNew);
         // Sort the data by OTU id search results
-        var sortedByOTUID = data.samples.sort((a, b) => b.sample_values - a.sample_values)[0];
-        var slicedOTUids = sortedByOTUID.otu_ids.slice(0, 10);
-        console.log(sortedByOTUID)
-        console.log(slicedOTUids)
+        var sortedByOTUID = dataNew.sample_values.sort((a, b) => b.sample_values - a.sample_values);
+        
+        var slicedOTUids = sortedByOTUID.slice(0, 10);
+        // console.log(sortedByOTUID)
+        // console.log(slicedOTUids)
 
         // Slice the first 10 objects for plotting
-        slicedData = sortedByOTUID.sample_values.slice(0, 10);
-        console.log(slicedData)
+        // slicedData = sortedByOTUID.sample_values.slice(0, 10);
+        var slicedData = slicedOTUids;
+        // console.log(slicedData)
 
         // Reverse the array to accommodate Plotly's defaults
         reversedData = slicedData.reverse();
+
 
         // Trace1 for the BellyButton Data bar
         var trace1 = {
@@ -47,14 +52,14 @@ function plot(id){
 
         // Bubble Trace
         var bubble_trace = {
-            x: sortedByOTUID.otu_ids,
-            y: sortedByOTUID.sample_values,
+            x: dataNew.otu_ids,
+            y: dataNew.sample_values,
             mode: 'markers',
             marker: {
-                size: sortedByOTUID.sample_values,
-                color: sortedByOTUID.otu_ids
+                size: dataNew.sample_values,
+                color: dataNew.otu_ids
             },
-            text: sortedByOTUID.otu_labels
+            text: dataNew.otu_labels
         };
 
         var bubble_data = [bubble_trace];
@@ -107,26 +112,29 @@ function meta(id) {
         panel.html("");
 
         // grab the necessary demographic data data for the id and append the info to the panel
-        Object.entries(result).forEach((key) => {   
-                panel.append("h5").text(key[0] + ": " + key[1] + "\n");    
+        // console.log(result);
+        Object.entries(result).forEach(([key,value]) => {   
+                panel.append("h5").text(key + ": " + value + "\n");    
         });
     });
 }
 
 // Create the function for the change event
 function optionChanged(id) {
+    // console.log(optionChanged)
     plot(id);
     meta(id);
+    console.log(id);
 }
 
 // Create the function for the initial data rendering
 function init() {
     // Select dropdown menu 
-    var dropdown = d3.select("#selDataset"); 
+    var dropdown = d3.select("#selDataset");    
 
     // Use d3.json() to fetch data from JSON file
     d3.json("samples.json").then((data)=> {
-        console.log(data)
+        // console.log(data)
 
         // Filling the dropdown menu
         data.names.forEach(function(name) {
@@ -140,3 +148,6 @@ function init() {
 }
 
 init();
+
+// Call updatePlotly() when a change takes place to the DOM
+// d3.selectAll("#selDataset").on("change", optionChanged);
