@@ -20,7 +20,7 @@ function plot(id){
         // console.log(slicedData)
 
         // Reverse the array to accommodate Plotly's defaults
-        reversedData = slicedData.reverse();
+        reversedData = slicedOTUids.reverse();
 
 
         // Trace1 for the BellyButton Data bar
@@ -47,7 +47,7 @@ function plot(id){
         }
         };
 
-        // // Render the plot to the div tag with id "plot"
+        // // Render the plot to the div tag with id "bar"
         Plotly.newPlot("bar", [trace1], layout);
 
         // Bubble Trace
@@ -70,15 +70,23 @@ function plot(id){
             yaxis: {title: ''}
         };
 
+        // // Render the plot to the div tag with id "bubble"
         Plotly.newPlot("bubble", bubble_data, bubble_layout);
 
-        var washingFreq = data.metadata.map(d => d.wfreq)
-        console.log(`Washing Freq: ${washingFreq}`)
+        // Washing Frequency Gaugue
+        var x = data.metadata;
+        console.log(x);
+        var y = data.metadata.filter(element => {
+            console.log(element.id === parseInt(id))
+            element.id === parseInt(id)});
+        console.log(y);
+        washi = y.wfreq
 
+        // Gauge Trace
         var data = [
             {
               domain: { x: [0, 1], y: [0, 1] },
-              value: washingFreq[0],
+              value: washingFreq[id],
               title: { text: "Belly Button Washing Frecuency" },
               type: "indicator",
               mode: "gauge+number",
@@ -87,6 +95,7 @@ function plot(id){
             }
           ];
           
+          // // Render the plot to the div tag with id "gauge"
           var layout = { width: 600, height: 400 };
           Plotly.newPlot('gauge', data, layout);
 
@@ -100,7 +109,7 @@ function meta(id) {
         
         // get the metadata info for the demographic panel
         var metaInfo = data.metadata;
-        console.log(metaInfo)
+        // console.log(metaInfo)
 
         // filter meta data info by id
         var result = metaInfo.filter(meta => meta.id.toString() === id)[0];
