@@ -8,24 +8,19 @@ function plot(id){
         var dataNew = data.samples.filter(data => data.id.toString() === id)[0];
         console.log(dataNew);
         // Sort the data by OTU id search results
-        var sortedByOTUID = dataNew.sample_values.sort((a, b) => b.sample_values - a.sample_values);
-        
+        var sortedByOTUID = dataNew.otu_ids.sort((a, b) => b.sample_values - a.sample_values);
         var slicedOTUids = sortedByOTUID.slice(0, 10);
         // console.log(sortedByOTUID)
         // console.log(slicedOTUids)
-
         // Slice the first 10 objects for plotting
         // slicedData = sortedByOTUID.sample_values.slice(0, 10);
-        var slicedData = slicedOTUids;
-        // console.log(slicedData)
-
+        var slicedData = dataNew.sample_values.slice(0, 10);
+        console.log(slicedData)
         // Reverse the array to accommodate Plotly's defaults
         reversedData = slicedOTUids.reverse();
-
-
         // Trace1 for the BellyButton Data bar
         var trace1 = {
-        x: slicedData,
+        x: slicedData.reverse(),
         y: slicedOTUids.map(otuID => `OTU ${otuID}`),
         text: sortedByOTUID.otu_labels,
         name: "OTU",
