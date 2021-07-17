@@ -75,18 +75,16 @@ function plot(id){
 
         // Washing Frequency Gaugue
         var x = data.metadata;
-        console.log(x);
-        var y = data.metadata.filter(element => {
-            console.log(element.id === parseInt(id))
-            element.id === parseInt(id)});
-        console.log(y);
+        console.log(id);
+        var y = data.metadata.filter(z => parseInt(z.id) === parseInt(id))[0];
         washi = y.wfreq
+
 
         // Gauge Trace
         var data = [
             {
               domain: { x: [0, 1], y: [0, 1] },
-              value: washingFreq[id],
+              value: washi,
               title: { text: "Belly Button Washing Frecuency" },
               type: "indicator",
               mode: "gauge+number",
